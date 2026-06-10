@@ -1,10 +1,24 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import ProductsPage from "./pages/ProductsPage";
+import CartPage from "./pages/CartPage";
+import AdminPage from "./pages/AdminPage";
+
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <h1 className="text-3xl font-bold text-center py-10 text-pink-500">
-        🎂 SweetShop
-      </h1>
-    </div>
+    // 1. BrowserRouter habilita la navegación por URL en toda la app
+    <BrowserRouter>
+      <div className="min-h-screen bg-gray-50">
+        {/* 2. Routes es el contenedor de todas las rutas */}
+        <Routes>
+          {/* 3. Cada Route define qué componente renderizar según la URL */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/admin" element={<AdminPage />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
