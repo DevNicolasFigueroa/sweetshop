@@ -1,25 +1,30 @@
-require('dotenv').config()
+require("dotenv").config();
 
-const express = require('express')
-const cors = require('cors')
+const express = require("express");
+const cors = require("cors");
+const connectDB = require("./config/db");
 
-// 1. Importamos la función de conexión que acabamos de crear
-const connectDB = require('./config/db')
+// 1. Importamos el router de productos
+const productRoutes = require("./routes/productRoutes");
 
-const app = express()
+const app = express();
 
-// 2. Conectamos a MongoDB ANTES de iniciar el servidor
-connectDB()
+connectDB();
 
-app.use(cors())
-app.use(express.json())
+app.use(cors());
+app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.json({ message: '🎂 SweetShop API funcionando' })
-})
+// 2. Montamos el router bajo el prefijo /api/products
+//    Todas las rutas definidas en productRoutes.js
+//    serán relativas a este prefijo
+app.use("/api/products", productRoutes);
 
-const PORT = process.env.PORT || 4000
+app.get("/", (req, res) => {
+  res.json({ message: "🎂 SweetShop API funcionando" });
+});
+
+const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`)
-})
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+});
