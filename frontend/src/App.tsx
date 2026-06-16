@@ -3,6 +3,7 @@ import HomePage from "./pages/HomePage";
 import ProductsPage from "./pages/ProductsPage";
 import CartPage from "./pages/CartPage";
 import AdminPage from "./pages/AdminPage";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
@@ -10,6 +11,8 @@ function App() {
     <BrowserRouter>
       <div className="min-h-screen bg-gray-50">
         {/* 2. Routes es el contenedor de todas las rutas */}
+
+        <Navbar />
         <Routes>
           {/* 3. Cada Route define qué componente renderizar según la URL */}
           <Route path="/" element={<HomePage />} />
