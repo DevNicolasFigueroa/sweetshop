@@ -4,6 +4,7 @@ import ProductsPage from "./pages/ProductsPage";
 import CartPage from "./pages/CartPage";
 import AdminPage from "./pages/AdminPage";
 import Navbar from "./components/Navbar";
+import ProductDetailPage from "./pages/ProductDetailPage";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           {/* 3. Cada Route define qué componente renderizar según la URL */}
           <Route path="/" element={<HomePage />} />
           <Route path="/products" element={<ProductsPage />} />
+          <Route path="/products/:id" element={<ProductDetailPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/admin" element={<AdminPage />} />
         </Routes>
