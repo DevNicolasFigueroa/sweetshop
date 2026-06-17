@@ -4,21 +4,20 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { type Product } from "../types/product";
 import { getProductById } from "../services/productService";
+import { useCart } from "../context/cartContext";
 
 const ProductDetailPage = () => {
-  // 1. useParams extrae el :id de la URL /products/:id
   const { id } = useParams<{ id: string }>();
-
-  // 2. useNavigate nos permite redirigir programáticamente
   const navigate = useNavigate();
+  const { addToCart } = useCart();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
+  const [added, setAdded] = useState(false);
 
   useEffect(() => {
-    // 3. Si por alguna razón no hay id en la URL, volvemos al catálogo
     if (!id) {
       navigate("/products");
       return;
@@ -39,6 +38,13 @@ const ProductDetailPage = () => {
     fetchProduct();
   }, [id, navigate]);
 
+  const handleAddToCart = () => {
+    if (!product) return;
+    addToCart(product, quantity);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
+  };
+
   const formattedPrice = product
     ? new Intl.NumberFormat("es-CL", {
         style: "currency",
@@ -46,8 +52,7 @@ const ProductDetailPage = () => {
       }).format(product.price)
     : "";
 
-  // ── Estados de carga y error ──────────────────────────────────────
-
+  // ── Estado de carga ───────────────────────────────────────────────
   if (loading) {
     return (
       <div className="flex justify-center items-center py-40">
@@ -56,6 +61,7 @@ const ProductDetailPage = () => {
     );
   }
 
+  // ── Estado de error ───────────────────────────────────────────────
   if (error || !product) {
     return (
       <div className="max-w-6xl mx-auto px-4 py-20 text-center">
@@ -73,10 +79,9 @@ const ProductDetailPage = () => {
   }
 
   // ── Vista principal ───────────────────────────────────────────────
-
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
-      {/* Breadcrumb de navegación */}
+      {/* Breadcrumb */}
       <nav className="text-sm text-gray-400 mb-8">
         <Link to="/products" className="hover:text-pink-500 transition-colors">
           Productos
@@ -88,7 +93,7 @@ const ProductDetailPage = () => {
       </nav>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-        {/* Columna izquierda — imagen */}
+        {/* Imagen */}
         <div className="bg-pink-50 rounded-2xl flex items-center justify-center h-96">
           {product.image ? (
             <img
@@ -101,24 +106,20 @@ const ProductDetailPage = () => {
           )}
         </div>
 
-        {/* Columna derecha — información */}
+        {/* Información */}
         <div className="flex flex-col justify-center">
-          {/* Categoría */}
           <span className="text-sm font-medium text-pink-500 uppercase tracking-wide">
             {product.category}
           </span>
 
-          {/* Nombre */}
           <h1 className="text-3xl font-bold text-gray-800 mt-2">
             {product.name}
           </h1>
 
-          {/* Precio */}
           <p className="text-2xl font-bold text-pink-500 mt-3">
             {formattedPrice}
           </p>
 
-          {/* Descripción */}
           <p className="text-gray-500 mt-4 leading-relaxed">
             {product.description}
           </p>
@@ -165,15 +166,16 @@ const ProductDetailPage = () => {
           )}
 
           {/* Botón agregar al carrito */}
-          {/* La lógica real se conecta en la Fase 03 con CartContext */}
           <button
+            onClick={handleAddToCart}
             className="mt-6 bg-pink-500 hover:bg-pink-600 text-white font-medium py-3 px-8 rounded-xl transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={product.stock === 0}
+            disabled={product.stock === 0 || added}
           >
-            Agregar al carrito — {formattedPrice}
+            {added
+              ? "✓ Agregado al carrito"
+              : `Agregar al carrito — ${formattedPrice}`}
           </button>
 
-          {/* Link para volver */}
           <Link
             to="/products"
             className="mt-4 text-sm text-gray-400 hover:text-pink-500 transition-colors text-center"
