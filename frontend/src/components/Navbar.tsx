@@ -1,7 +1,7 @@
 // src/components/Navbar.tsx
 
 import { Link } from "react-router-dom";
-import { useCart } from "../context/cartContext";
+import { useCart } from "../context/CartContext";
 
 const Navbar = () => {
   const { totalItems } = useCart();
