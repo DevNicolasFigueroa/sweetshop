@@ -6,6 +6,7 @@ const connectDB = require("./config/db");
 
 // 1. Importamos el router de productos
 const productRoutes = require("./routes/productRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
 const app = express();
 
@@ -18,6 +19,8 @@ app.use(express.json());
 //    Todas las rutas definidas en productRoutes.js
 //    serán relativas a este prefijo
 app.use("/api/products", productRoutes);
+
+app.use("/api/orders", orderRoutes);
 
 app.get("/", (req, res) => {
   res.json({ message: "🎂 SweetShop API funcionando" });
