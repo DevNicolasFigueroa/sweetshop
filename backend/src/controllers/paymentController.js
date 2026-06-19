@@ -14,9 +14,6 @@ const createPayment = async (req, res) => {
   try {
     const { items, payerEmail } = req.body;
 
-    // 1. Calculamos el total en el backend
-    //    Nunca confiamos en el total que envía el frontend
-    //    porque podría ser manipulado
     const total = items.reduce(
       (sum, item) => sum + item.price * item.quantity,
       0,
